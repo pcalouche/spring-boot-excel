@@ -1,14 +1,13 @@
 package com.pcalouche.excelspringboot.excel;
 
 import com.pcalouche.excelspringboot.util.DownloadableFile;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellReference;
 import org.apache.poi.util.DefaultTempFileCreationStrategy;
 import org.apache.poi.util.TempFile;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
+import org.apache.poi.xssf.usermodel.XSSFCellStyle;
+import org.apache.poi.xssf.usermodel.XSSFRichTextString;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +23,8 @@ public abstract class ExcelExport implements DownloadableFile {
     // Currently Apache POI doesn't use the new Java Time for its methods, so falling back to old Java classes
     private static final Logger logger = LoggerFactory.getLogger(ExcelExport.class);
     private static final Path EXCEL_TEMP_FILE_PATH;
+    protected final Font boldFont;
+    protected final XSSFCellStyle boldStyle;
 
     // In the static block of this class, set the Apache POI temp files path and delete an old files that may have been there.
     // Because this is a static block it should only run once when any instance of ExcelExport is created
@@ -52,11 +53,17 @@ public abstract class ExcelExport implements DownloadableFile {
     private Workbook workbook;
 
     public ExcelExport(boolean useStreaming) {
+        XSSFWorkbook xssfWorkbook = new XSSFWorkbook();
+        boldFont = xssfWorkbook.createFont();
+        boldFont.setBold(true);
+        boldStyle = xssfWorkbook.createCellStyle();
+        boldStyle.setFont(boldFont);
+
         // If streaming is true use the streaming version of Apache Poi.
         if (useStreaming) {
-            workbook = new SXSSFWorkbook(((XSSFWorkbook) workbook), 100);
+            workbook = new SXSSFWorkbook(xssfWorkbook, 100);
         } else {
-            workbook = new XSSFWorkbook();
+            workbook = xssfWorkbook;
         }
     }
 
@@ -104,11 +111,20 @@ public abstract class ExcelExport implements DownloadableFile {
                 Cell cell = row.createCell(j);
                 cell.setCellValue(new CellReference(cell).formatAsString());
             }
+            // Uncomment to see status information every few rows
             //            if (i >= 10 && i % 10 == 0) {
             //                logger.info("done with row->" + i);
             //            }
         }
         Long endSheetTime = System.currentTimeMillis();
         logger.info("Total sheet generation time " + (endSheetTime - sheetStartTime) / 1000 + " seconds.");
+    }
+
+    protected void addRichTextCell(Workbook workbook) {
+        Sheet richTextSheet = workbook.createSheet("Rich Text Sheet");
+        XSSFRichTextString richTextString = new XSSFRichTextString("Label: The label section should be bold.  This doesn't work when Streaming Excel is used though.");
+        richTextString.applyFont(0, "Label:".length(), boldFont);
+        Cell cell = richTextSheet.createRow(0).createCell(0);
+        cell.setCellValue(richTextString);
     }
 }

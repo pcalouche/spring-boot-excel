@@ -9,8 +9,9 @@ public class NonStreamingExcelExport extends ExcelExport implements Downloadable
         build(columns, rows);
     }
 
-    public void build(int columns, int rows) {
+    private void build(int columns, int rows) {
         addDataToWorkbook(getXSSFWorkbook(), columns, rows);
+        addRichTextCell(getXSSFWorkbook());
     }
 
     @Override

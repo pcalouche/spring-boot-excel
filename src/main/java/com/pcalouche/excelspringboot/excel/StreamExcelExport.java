@@ -7,8 +7,9 @@ public class StreamExcelExport extends ExcelExport {
         build(columns, rows);
     }
 
-    public void build(int columns, int rows) {
+    private void build(int columns, int rows) {
         addDataToWorkbook(getSXSSFWorkbook(), columns, rows);
+        addRichTextCell(getSXSSFWorkbook());
     }
 
     @Override
