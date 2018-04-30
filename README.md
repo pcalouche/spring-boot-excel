@@ -19,7 +19,8 @@ Excel file.  After all rows have been exported calling "dispose" on the workbook
 the workbook instance unusable.  A new workbook instance would need to be created in order to append. 
 
 This type of export does not seem to support rich text cells.  However, a single style can be applied to all content 
-in the cell just fine.  I would love to be proven wrong about this.
+in the cell just fine.  I would love to be proven wrong about this.  A possible workaround could be to re-open the 
+workbook after initial processing as a non streaming workbook and add the rich text cells.
 
 This type of export is good for large exports.
 
