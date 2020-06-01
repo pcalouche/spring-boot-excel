@@ -11,6 +11,7 @@ import org.apache.poi.xssf.usermodel.XSSFRichTextString;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.MediaType;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -23,8 +24,6 @@ public abstract class ExcelExport implements DownloadableFile {
     // Currently Apache POI doesn't use the new Java Time for its methods, so falling back to old Java classes
     private static final Logger logger = LoggerFactory.getLogger(ExcelExport.class);
     private static final Path EXCEL_TEMP_FILE_PATH;
-    protected final Font boldFont;
-    protected final XSSFCellStyle boldStyle;
 
     // In the static block of this class, set the Apache POI temp files path and delete an old files that may have been there.
     // Because this is a static block it should only run once when any instance of ExcelExport is created
@@ -50,7 +49,9 @@ public abstract class ExcelExport implements DownloadableFile {
         }
     }
 
-    private Workbook workbook;
+    protected final Font boldFont;
+    protected final XSSFCellStyle boldStyle;
+    private final Workbook workbook;
 
     public ExcelExport(boolean useStreaming) {
         XSSFWorkbook xssfWorkbook = new XSSFWorkbook();
@@ -89,8 +90,8 @@ public abstract class ExcelExport implements DownloadableFile {
     }
 
     @Override
-    public String getContentType() {
-        return "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+    public MediaType getContentType() {
+        return MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
     }
 
     protected XSSFWorkbook getXSSFWorkbook() {

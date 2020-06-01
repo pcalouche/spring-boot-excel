@@ -1,29 +1,20 @@
 package com.pcalouche.excelspringboot.util;
 
-import org.springframework.http.HttpHeaders;
-
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
+import org.springframework.http.*;
 
 public interface DownloadableFile {
     byte[] getBytes();
 
-    String getContentType();
-
-    default String getContentDisposition() {
-        return String.format("attachment; filename=%s", getFilename());
-    }
+    MediaType getContentType();
 
     String getFilename();
 
-    default void writeToHttpResponse(HttpServletResponse response) throws IOException {
-        response.setContentType(getContentType());
-        response.addHeader(HttpHeaders.CONTENT_DISPOSITION, getContentDisposition());
-        byte[] bytes = getBytes();
-        if (bytes == null) {
-            response.getOutputStream().write(new byte[0]);
-        } else {
-            response.getOutputStream().write(bytes);
-        }
+    default ResponseEntity<byte[]> getResponseEntity() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(getContentType());
+        headers.setContentDisposition(ContentDisposition.builder("attachment")
+                .filename(getFilename())
+                .build());
+        return new ResponseEntity<>(getBytes(), headers, HttpStatus.OK);
     }
 }
