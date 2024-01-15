@@ -1,0 +1,25 @@
+name: Continuous Integration
+
+on:
+  push:
+
+permissions:
+  contents: read
+
+jobs:
+  maven-verify:
+    runs-on: ubuntu-latest
+    name: Maven Verify
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          show-progress: false
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
+      - name: Verify build
+        run: mvn -B verify

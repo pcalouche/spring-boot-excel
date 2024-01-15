@@ -10,40 +10,39 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-
 @RestController
 @RequestMapping("/excel")
 public class ExcelController {
-    private static final Logger logger = LoggerFactory.getLogger(ExcelController.class);
 
-    @GetMapping("non-streaming-excel")
-    public ResponseEntity<byte[]> nonStreamingExcel(@RequestParam int columns, @RequestParam int rows, HttpServletResponse response) throws IOException {
-        logger.info("columns->" + columns + " rows->" + rows);
+	private static final Logger logger = LoggerFactory.getLogger(ExcelController.class);
 
-        Long startTime = System.currentTimeMillis();
-        logger.info("start of Non Streaming Excel request");
+	@GetMapping("non-streaming-excel")
+	public ResponseEntity<byte[]> nonStreamingExcel(@RequestParam int columns, @RequestParam int rows) {
+		logger.info("columns->" + columns + " rows->" + rows);
 
-        NonStreamingExcelExport nonStreamingExcelExport = new NonStreamingExcelExport(columns, rows);
+		Long startTime = System.currentTimeMillis();
+		logger.info("start of Non Streaming Excel request");
 
-        Long endTime = System.currentTimeMillis();
-        logger.info("end of Non Streaming Excel request->" + (endTime - startTime) / 1000 + " seconds.");
+		NonStreamingExcelExport nonStreamingExcelExport = new NonStreamingExcelExport(columns, rows);
 
-        return nonStreamingExcelExport.getResponseEntity();
-    }
+		Long endTime = System.currentTimeMillis();
+		logger.info("end of Non Streaming Excel request->" + (endTime - startTime) / 1000 + " seconds.");
 
-    @GetMapping("streaming-excel")
-    public ResponseEntity<byte[]> streamingExcel(@RequestParam int columns, @RequestParam int rows, HttpServletResponse response) throws IOException {
-        logger.info("columns->" + columns + " rows->" + rows);
+		return nonStreamingExcelExport.getResponseEntity();
+	}
 
-        Long startTime = System.currentTimeMillis();
-        logger.info("start of Streaming Excel request");
+	@GetMapping("streaming-excel")
+	public ResponseEntity<byte[]> streamingExcel(@RequestParam int columns, @RequestParam int rows) {
+		logger.info("columns->" + columns + " rows->" + rows);
 
-        StreamExcelExport streamExcelExport = new StreamExcelExport(columns, rows);
+		Long startTime = System.currentTimeMillis();
+		logger.info("start of Streaming Excel request");
 
-        Long endTime = System.currentTimeMillis();
-        logger.info("end of Streaming Excel request->" + (endTime - startTime) / 1000 + " seconds.");
-        return streamExcelExport.getResponseEntity();
-    }
+		StreamExcelExport streamExcelExport = new StreamExcelExport(columns, rows);
+
+		Long endTime = System.currentTimeMillis();
+		logger.info("end of Streaming Excel request->" + (endTime - startTime) / 1000 + " seconds.");
+		return streamExcelExport.getResponseEntity();
+	}
+
 }
