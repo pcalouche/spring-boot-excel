@@ -1,7 +1,10 @@
-# To get started with Dependabot version updates, you'll need to specify which
-# package ecosystems to update and where the package manifests are located.
-# Please see the documentation for all configuration options:
 version: 2
+registries:
+  github:
+    type: "maven-repository"
+    url: "https://maven.pkg.github.com/pcalouche/*"
+    username: ${{ secrets.MAVEN_SERVER_USERNAME }}
+    password: ${{ secrets.MAVEN_SERVER_PASSWORD }}
 updates:
   - package-ecosystem: "maven"
     directory: "/" # Location of package manifests
