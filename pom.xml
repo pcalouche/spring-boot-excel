@@ -49,11 +49,16 @@
       </snapshots>
       <id>github</id>
       <url>https://maven.pkg.github.com/pcalouche/*</url>
-      <!--          <url>https://maven.pkg.github.com/pcalouche/calouche-company-pom</url>-->
     </repository>
   </repositories>
 
   <build>
-    <finalName>excel-spring-boot</finalName>
+    <plugins>
+      <plugin>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-maven-plugin</artifactId>
+      </plugin>
+    </plugins>
   </build>
+
 </project>
