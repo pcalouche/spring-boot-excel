@@ -1,6 +1,6 @@
-package com.pcalouche.excelspringboot.excel;
+package dev.pcalouche.springboot.excel.excel;
 
-import com.pcalouche.excelspringboot.util.DownloadableFile;
+import dev.pcalouche.springboot.excel.util.DownloadableFile;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -37,7 +37,7 @@ public abstract class ExcelExport implements DownloadableFile {
 	// ExcelExport is created
 	static {
 		EXCEL_TEMP_FILE_PATH = Paths.get(System.getProperty("user.dir")).resolve("excelStaging");
-		logger.info("Excel temp file staging path set to->" + EXCEL_TEMP_FILE_PATH.toAbsolutePath());
+		logger.info("Excel temp file staging path set to->{}", EXCEL_TEMP_FILE_PATH.toAbsolutePath());
 		if (!Files.exists(EXCEL_TEMP_FILE_PATH)) {
 			try {
 				Files.createDirectories(EXCEL_TEMP_FILE_PATH);
@@ -50,7 +50,7 @@ public abstract class ExcelExport implements DownloadableFile {
 		// Deleting an old files at startup
 		try (Stream<Path> streamPath = Files.list(EXCEL_TEMP_FILE_PATH)) {
 			streamPath.forEach(path -> {
-				logger.info("Deleting old Excel temp file->" + path.toAbsolutePath());
+				logger.info("Deleting old Excel temp file->{}", path.toAbsolutePath());
 				try {
 					Files.deleteIfExists(path);
 				}

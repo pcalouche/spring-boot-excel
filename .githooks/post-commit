@@ -1,0 +1,6 @@
+#!/bin/sh
+
+# update git's index (bc they get messy with the pre-commit hook) according to
+# https://prettier.io/docs/en/precommit.html
+# see also https://github.com/prettier/prettier/issues/2978
+git update-index -g

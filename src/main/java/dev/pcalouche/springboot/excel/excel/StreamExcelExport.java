@@ -1,4 +1,4 @@
-package com.pcalouche.excelspringboot.excel;
+package dev.pcalouche.springboot.excel.excel;
 
 public class StreamExcelExport extends ExcelExport {
 
