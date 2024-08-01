@@ -1,4 +1,4 @@
-package com.pcalouche.excelspringboot.util;
+package dev.pcalouche.springboot.excel.util;
 
 import org.springframework.http.*;
 

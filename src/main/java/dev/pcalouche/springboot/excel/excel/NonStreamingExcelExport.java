@@ -1,6 +1,6 @@
-package com.pcalouche.excelspringboot.excel;
+package dev.pcalouche.springboot.excel.excel;
 
-import com.pcalouche.excelspringboot.util.DownloadableFile;
+import dev.pcalouche.springboot.excel.util.DownloadableFile;
 
 public class NonStreamingExcelExport extends ExcelExport implements DownloadableFile {
 
