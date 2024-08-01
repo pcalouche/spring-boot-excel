@@ -3,8 +3,6 @@ registries:
   github:
     type: "maven-repository"
     url: "https://maven.pkg.github.com/pcalouche/*"
-    username: ${{ github.actor }}
-    password: ${{ github.token }}
 updates:
   - package-ecosystem: "maven"
     directory: "/"
