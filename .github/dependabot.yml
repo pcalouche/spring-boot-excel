@@ -2,16 +2,13 @@ version: 2
 registries:
   github:
     type: "maven-repository"
-    url: "https://maven.pkg.github.com/pcalouche/spring-forge"
-#    username: ${{ github.actor }}
-#    password: ${{ github.token }}
+    url: "https://maven.pkg.github.com/pcalouche"
 updates:
   - package-ecosystem: "maven"
     directory: "/"
-    registries:
-      - github
+    registries: "*"
     schedule:
-      interval: "daily"
+      interval: "weekly"
     target-branch: "main"
   - package-ecosystem: "github-actions"
     directory: "/"

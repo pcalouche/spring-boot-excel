@@ -47,7 +47,7 @@
         <enabled>true</enabled>
       </snapshots>
       <id>github</id>
-      <url>https://maven.pkg.github.com/pcalouche/*</url>
+      <url>https://maven.pkg.github.com/pcalouche</url>
     </repository>
   </repositories>
 
