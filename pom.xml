@@ -14,6 +14,14 @@
   <version>1.0.0-SNAPSHOT</version>
   <name>Excel Export Spring Boot Example</name>
 
+  <distributionManagement>
+    <repository>
+      <id>github-pcalouche-spring-boot-excel</id>
+      <name>Spring Boot Excel</name>
+      <url>https://maven.pkg.github.com/pcalouche/spring-boot-excel</url>
+    </repository>
+  </distributionManagement>
+
   <dependencies>
     <dependency>
       <groupId>dev.pcalouche.springforge.spring33x</groupId>
@@ -43,11 +51,15 @@
 
   <repositories>
     <repository>
+      <id>central</id>
+      <url>https://repo.maven.apache.org/maven2</url>
+    </repository>
+    <repository>
       <snapshots>
         <enabled>true</enabled>
       </snapshots>
-      <id>github</id>
-      <url>https://maven.pkg.github.com/pcalouche</url>
+      <id>github-pcalouche-spring-forge</id>
+      <url>https://maven.pkg.github.com/pcalouche/spring-forge</url>
     </repository>
   </repositories>
 

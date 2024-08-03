@@ -2,11 +2,9 @@ name: Continuous Integration
 
 on:
   push:
-    branches-ignore:
-      - main
 
 permissions:
-  contents: write
+  contents: read
   packages: read
 
 concurrency:
@@ -29,7 +27,7 @@ jobs:
           distribution: 'temurin'
           cache: maven
       - name: Run Maven
-        run: mvn -B clean verify
+        run: mvn -B -s ./.mvn/settings.xml clean verify
         env:
           GITHUB_ACTOR: ${{ github.actor }}
           GITHUB_TOKEN: ${{ github.token }}
