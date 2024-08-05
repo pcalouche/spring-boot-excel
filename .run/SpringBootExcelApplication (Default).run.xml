@@ -1,7 +1,7 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="SpringBootExcelApplication (Default)" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
     <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
-    <module name="excel-spring-boot" />
+    <module name="spring-boot-excel" />
     <option name="SPRING_BOOT_MAIN_CLASS" value="dev.pcalouche.springboot.excel.SpringBootExcelApplication" />
     <option name="UPDATE_ACTION_UPDATE_POLICY" value="UpdateClassesAndResources" />
     <extension name="net.ashald.envfile">
