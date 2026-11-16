@@ -7,6 +7,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.stream.Stream;
+
+import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.Row;
@@ -19,15 +21,10 @@ import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFRichTextString;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 
+@Slf4j
 public abstract class ExcelExport implements DownloadableFile {
-
-	// Currently Apache POI doesn't use the new Java Time for its methods, so falling back
-	// to old Java classes
-	private static final Logger logger = LoggerFactory.getLogger(ExcelExport.class);
 
 	private static final Path EXCEL_TEMP_FILE_PATH;
 
@@ -37,30 +34,30 @@ public abstract class ExcelExport implements DownloadableFile {
 	// ExcelExport is created
 	static {
 		EXCEL_TEMP_FILE_PATH = Paths.get(System.getProperty("user.dir")).resolve("excelStaging");
-		logger.info("Excel temp file staging path set to->{}", EXCEL_TEMP_FILE_PATH.toAbsolutePath());
+		log.info("Excel temp file staging path set to->{}", EXCEL_TEMP_FILE_PATH.toAbsolutePath());
 		if (!Files.exists(EXCEL_TEMP_FILE_PATH)) {
 			try {
 				Files.createDirectories(EXCEL_TEMP_FILE_PATH);
 			}
 			catch (IOException e) {
-				logger.error("Could not create temp page", e);
+				log.error("Could not create temp page", e);
 			}
 		}
 		TempFile.setTempFileCreationStrategy(new DefaultTempFileCreationStrategy(EXCEL_TEMP_FILE_PATH.toFile()));
 		// Deleting an old files at startup
 		try (Stream<Path> streamPath = Files.list(EXCEL_TEMP_FILE_PATH)) {
 			streamPath.forEach(path -> {
-				logger.info("Deleting old Excel temp file->{}", path.toAbsolutePath());
+				log.info("Deleting old Excel temp file->{}", path.toAbsolutePath());
 				try {
 					Files.deleteIfExists(path);
 				}
 				catch (IOException e) {
-					logger.error("Exception occurred during Excel temp file deletion", e);
+					log.error("Exception occurred during Excel temp file deletion", e);
 				}
 			});
 		}
 		catch (IOException e) {
-			logger.error("Exception occurred during listing of Excel temp files", e);
+			log.error("Exception occurred during listing of Excel temp files", e);
 		}
 	}
 
@@ -77,9 +74,9 @@ public abstract class ExcelExport implements DownloadableFile {
 		boldStyle = xssfWorkbook.createCellStyle();
 		boldStyle.setFont(boldFont);
 
-		// If streaming is true use the streaming version of Apache Poi.
+		// If streaming is true use the streaming version of Apache POI.
 		if (useStreaming) {
-			workbook = new SXSSFWorkbook(xssfWorkbook, 100);
+			workbook = new SXSSFWorkbook(xssfWorkbook, 100, false, true);
 		}
 		else {
 			workbook = xssfWorkbook;
@@ -89,22 +86,22 @@ public abstract class ExcelExport implements DownloadableFile {
 	@Override
 	public byte[] getBytes() {
 		Long startTime = System.currentTimeMillis();
-		logger.info("start getBytes for Excel");
+		log.info("start getBytes for Excel");
 		byte[] bytes;
 		try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()) {
 			workbook.write(byteArrayOutputStream);
 			bytes = byteArrayOutputStream.toByteArray();
-			// If streaming Apache Poi was used then dispose of temp files
+			// If streaming Apache POI was used then dispose of temp files
 			if (workbook instanceof SXSSFWorkbook) {
-				((SXSSFWorkbook) workbook).dispose();
+				workbook.close();
 			}
 		}
 		catch (IOException e) {
-			logger.error("Failed to convert Excel to byte array", e);
+			log.error("Failed to convert Excel to byte array", e);
 			throw new RuntimeException("Failed to convert Excel to byte array: " + e.getMessage());
 		}
 		Long endTime = System.currentTimeMillis();
-		logger.info("end getBytes for Excel->" + (endTime - startTime) / 1000 + " seconds.");
+		log.info("end getBytes for Excel->{} seconds.", (endTime - startTime) / 1000);
 		return bytes;
 	}
 
@@ -123,7 +120,7 @@ public abstract class ExcelExport implements DownloadableFile {
 
 	protected void addDataToWorkbook(Workbook workbook, int columns, int rows) {
 		Long sheetStartTime = System.currentTimeMillis();
-		logger.info("start sheet generation");
+		log.info("start sheet generation");
 		Sheet dataSheet = workbook.createSheet("Data");
 		for (int i = 0; i < rows; i++) {
 			Row row = dataSheet.createRow(i);
@@ -133,11 +130,11 @@ public abstract class ExcelExport implements DownloadableFile {
 			}
 			// Uncomment to see status information every few rows
 			// if (i >= 10 && i % 10 == 0) {
-			// logger.info("done with row->" + i);
+			// log.info("done with row->" + i);
 			// }
 		}
 		Long endSheetTime = System.currentTimeMillis();
-		logger.info("Total sheet generation time " + (endSheetTime - sheetStartTime) / 1000 + " seconds.");
+		log.info("Total sheet generation time {} seconds.", (endSheetTime - sheetStartTime) / 1000);
 	}
 
 	protected void addRichTextCell(Workbook workbook) {
